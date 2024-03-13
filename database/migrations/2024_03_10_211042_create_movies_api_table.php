@@ -17,16 +17,16 @@ return new class extends Migration
             $table->string('title');
             $table->string('year');
             $table->integer('runtime');
-            $table->json('genre');
+            $table->string('genre');
             $table->string('synopsis');
             $table->string('poster_url');
             $table->string('director');
             $table->string('casts');
             $table->string('writers');
-            $table->string('ratings');
+            $table->decimal('rating',3,1);
             $table->string('trailer_url');
-            $table->string('release_date');
-            $table->string('product_company');
+            $table->date('release_date');
+            $table->string('production_company');
             $table->timestamps();
         });
     }
