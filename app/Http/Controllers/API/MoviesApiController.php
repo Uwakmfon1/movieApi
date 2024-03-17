@@ -6,31 +6,41 @@ namespace App\Http\Controllers\API;
 use Faker\Factory;
 use App\Models\MoviesApi;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use App\Rules\ValidateRating;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class MoviesApiController extends Controller
 {
 
     public function index()
     {
-        $moviesApi = MoviesApi::all();
-        return response()->json(['movies'=>$moviesApi]);
-        // if($moviesApi->count() > 0){
-        //     return response()->json();
-        // }else{
-        //     return "page not found";
-        // }
+
+        $moviesApi = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/popular?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+            ->json();
+
+        $newMoviesApi =$moviesApi['results'];
+
+        foreach($newMoviesApi as $key => $value){
+            $getImage = $value['backdrop_path'];
+            $getTitle = $value['title'];
+        }
+
+        return view('api', [
+            'newMoviesApi'=>$newMoviesApi,
+            'value'=> $value,
+            'getImage' => $getImage,
+            'getTitle' =>  $getTitle,
+        ]);
+
     }
 
 
 
     public function store(Request $request)
     {
-
-        // $faker = Factory::create();
-        // dd($request);
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:191',
             'year' => 'required|integer',
