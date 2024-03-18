@@ -10,7 +10,7 @@
 <style>
     html{
         margin-left: 1em;
-        
+
     }
 
     .movieItem{
@@ -28,9 +28,10 @@
 
     @foreach ($newMoviesApi as $newMovieApi => $value)
         <div class="movieItem">
-            <img src="{{ $value['backdrop_path'] }}" alt="img">
+            <h3>{{ $apiImageUrlBase  }}</h3>
+            <img src="{{ $apiImageUrlBase . $value['backdrop_path'] }}" alt="img">
             <h3>{{ $value['original_title'] }}</h3>
-            <p>{{ $value['release_date'] }}</p>
+            <p>{{$newDate }}</p>
         </div>
     @endforeach
 

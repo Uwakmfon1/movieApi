@@ -10,6 +10,7 @@ use App\Rules\ValidateRating;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class MoviesApiController extends Controller
 {
@@ -21,20 +22,28 @@ class MoviesApiController extends Controller
             ->get('https://api.themoviedb.org/3/movie/popular?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
             ->json();
 
-        $newMoviesApi =$moviesApi['results'];
 
-        foreach($newMoviesApi as $key => $value){
+
+        $newMoviesApi = $moviesApi['results'];
+
+        foreach ($newMoviesApi as $key => $value) {
+            $apiImageUrlBase = env('API_IMAGE_URL');
+            $originalDate = $value['release_date'];
+            $date = Carbon::parse($originalDate);
+            $newDate = $date->format('d-m-Y');
+
             $getImage = $value['backdrop_path'];
             $getTitle = $value['title'];
         }
 
         return view('api', [
-            'newMoviesApi'=>$newMoviesApi,
-            'value'=> $value,
+            'apiImageUrlBase'=>$apiImageUrlBase,
+            'newMoviesApi' => $newMoviesApi,
+            'value' => $value,
             'getImage' => $getImage,
             'getTitle' =>  $getTitle,
+            'newDate' => $newDate
         ]);
-
     }
 
 
@@ -54,7 +63,7 @@ class MoviesApiController extends Controller
             'ratings' => 'required|numeric|between:0,5',
             'trailer_url' => 'nullable|url',
             'release_date' => 'nullable|date',
-            "product_company"=>'required|string|max:191',
+            "product_company" => 'required|string|max:191',
         ]);
 
 
