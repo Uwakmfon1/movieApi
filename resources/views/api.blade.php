@@ -10,47 +10,77 @@
     <title>Document</title>
 </head>
 <style>
-    *{
+    * {
         margin: 0;
         padding: 0;
         list-style-type: none;
-        box-sizing:border-box;
+        box-sizing: border-box;
 
     }
 
-    body{
-        margin-top:1.5em;
+    body {
+        margin-top: 1.5em;
         margin-left: 1em;
-        margin-bottom:5em;
+        margin-bottom: 5em;
     }
 
-    .movieItem{
-
+    .movieItem {
+        border-radius: 8px;
+        width: 20%;
+        height: 45vh;
         flex-direction: auto;
-        height: auto 20%;
-        background-color: gray;
-        width:auto;
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
-    .container{
+
+    img {
+        border-radius: 8px 8px 0 0;
+    }
+
+    .container {
+        margin-left: 5em;
         display: flex;
-        flex-wrap:wrap;
+        flex-wrap: wrap;
         gap: 20px;
     }
 </style>
+
 <body>
     <div class="flex justify-between items-center mb-6">
         <h1>welcome to page</h1>
-        <input type="text" class="bg-gray-500 text-white rounded-full w-64 px-4 py-1 focus:outline-none focus:shadow-outline" placeholder="search">
+        <form action="" method="GET">
+            <input type="text" name="query"
+                class="form-control bg-gray-500 text-white rounded-full w-64 px-4 py-1 focus:outline-none focus:shadow-outline"
+                placeholder="search">
+            <div class="input-group-addon">
+                <span class="input-group-text">
+                    <i class="ti-search"></i>
+                </span>
+            </div>
+        </form>
+
     </div>
     <div class="container">
+        <?php use Carbon\Carbon; ?>
         @foreach ($newMoviesApi as $newMovieApi => $value)
-        <div class="movieItem">
+            <div class="movieItem">
+                <img src="{{ $apiImageUrlBase . $value['backdrop_path'] }}" alt="img">
+                <div class="ml-4">
+                    <p class="flex"> <svg xmlns="http://www.w3.org/2000/svg" fill="yellow" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                        </svg> <span class="space-x-3.5">{{ round($value['vote_average'], 1) }}</span></p>
+                    <h2 class="text-black font-bold">{{ $value['original_title'] }}</h2 class="font-bold">
+                    {{-- <p>{{ $newDate }} --}}
+                    @if (isset($value['release_date']))
+                        {{ Carbon::parse($value['release_date'])->format('M d, Y') }}
+                    @else
+                    @endif
 
-            <img src="{{ $apiImageUrlBase . $value['backdrop_path'] }}" alt="img">
-            <h3>{{ $value['original_title'] }}</h3>
-            <p>{{$newDate }}</p>
-        </div>
-    @endforeach
+                </div>
+            </div>
+        @endforeach
     </div>
 
 

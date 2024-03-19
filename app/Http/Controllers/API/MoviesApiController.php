@@ -26,17 +26,11 @@ class MoviesApiController extends Controller
 
         $newMoviesApi = $moviesApi['results'];
 
-        // $collection = collect($newMoviesApi);
-        // $currentPage = $request->get('page', 1);  // Default to page 1
-        // $perPage = 10; // Adjust as needed
 
-        // $paginatedData = $collection->paginate($perPage, $currentPage);
 
         foreach ($newMoviesApi as $key => $value) {
             $apiImageUrlBase = env('API_IMAGE_URL');
-            $originalDate = $value['release_date'];
-            $date = Carbon::parse($originalDate);
-            $newDate = $date->format('d-m-Y');
+
             $getImage = $value['backdrop_path'];
             $getTitle = $value['title'];
         }
@@ -47,7 +41,7 @@ class MoviesApiController extends Controller
             'value' => $value,
             'getImage' => $getImage,
             'getTitle' =>  $getTitle,
-            'newDate' => $newDate
+            
         ]);
     }
 

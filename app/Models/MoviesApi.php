@@ -20,6 +20,7 @@ class MoviesApi extends Model
         'writers','rating','trailer_url','release_date','production_company',    ];
     protected $casts = ['genre'=>'array'];
 
+    protected $dates= ['created_at'];
     public function users()
     {
         return $this->belongsTo(User::class);
