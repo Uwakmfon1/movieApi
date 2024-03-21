@@ -41,7 +41,7 @@ class MoviesApiController extends Controller
             'value' => $value,
             'getImage' => $getImage,
             'getTitle' =>  $getTitle,
-            
+
         ]);
     }
 
@@ -73,23 +73,8 @@ class MoviesApiController extends Controller
                 'errors' => $validator->messages()
             ], 422);
         } else {
-            // return $request;
+
             $moviesApi = $request->all();
-            // $moviesApi = MoviesApi::create([
-            //     'title' => $request->title,
-            //     'year' => $request->year,
-            //     'runtime' => $request->runtime,
-            //     'genre' => $request->genre,
-            //     'synopsis' => $request->synopsis,
-            //     'poster_url' => $request->poster_url,
-            //     'director' => $request->director,
-            //     'cast' => $request->cast,
-            //     'writers' => $request->writers,
-            //     'ratings' => $request->ratings,
-            //     'trailer_url' => $request->trailer_url,
-            //     'release_date' => $request->release_date,
-            //     'product_company' => $request->product_company,
-            // ]);
 
             if ($moviesApi) {
                 return response()->json([
@@ -103,5 +88,53 @@ class MoviesApiController extends Controller
                 ], 500);
             }
         }
+    }
+
+    public function show(Request $request)
+    {
+        $id = $request->route('id');
+
+
+        $searchResults = Http::withToken(config('services.tmdb.token'))
+        ->get('https://api.themoviedb.org/3/movie/'. $id .'?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+        ->json();
+
+        $allgenres = $searchResults['genres'];
+// dd($searchResults);
+        foreach($searchResults as $results => $value)
+        {
+            $compiledGenre =[];
+           foreach($allgenres as $genre => $value){
+
+               $compiledGenre[] = $value['name'];
+            //    $lastIndex = count($compiledGenre) - 1;
+           }
+
+
+            $apiImageUrlBase = env('API_IMAGE_URL1');
+
+        }
+        // $lastIndex = count($compiledGenre) - 1;
+
+        return view('show-movie',[
+            'searchResults' => $searchResults,
+            'apiImageUrlBase'=>$apiImageUrlBase,
+            'allgenres' => $allgenres,
+            'genre'=>$genre,
+            'value'=>$value,
+            'compiledGenre'=>$compiledGenre,
+            // 'lastIndex'=>$lastIndex,
+
+            // Stopped here, at last index. To continue from making all the genres be displayed.
+        ]);
+    }
+
+
+    public function getCasts()
+    {
+        $allCasts = Http::withToken(config('services.tmdb.token'))
+        ->get('https://api.themoviedb.org/3/movie/550/credits?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+        ->json();
+
     }
 }

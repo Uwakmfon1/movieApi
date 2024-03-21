@@ -16,4 +16,4 @@ Route::get('movies', [MoviesApiController::class, 'index']);
 
 Route::post('movies', [MoviesApiController::class,'store']);
 
-
+Route::get('movies/show/{id}',[MoviesApiController::class,'show'])->name('movies.show');
