@@ -15,11 +15,12 @@ use Carbon\Carbon;
 class MoviesApiController extends Controller
 {
 
+
     public function index(Request $request)
     {
 
         $moviesApi = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/movie/popular?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+            ->get('https://api.themoviedb.org/3/movie/top_rated?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
             ->json();
 
 
@@ -33,9 +34,11 @@ class MoviesApiController extends Controller
 
             $getImage = $value['backdrop_path'];
             $getTitle = $value['title'];
+            $id = $value['id'];
         }
 
         return view('api', [
+            'id' => $id,
             'apiImageUrlBase'=>$apiImageUrlBase,
             'newMoviesApi' => $newMoviesApi,
             'value' => $value,
@@ -66,7 +69,6 @@ class MoviesApiController extends Controller
         ]);
 
 
-
         if ($validator->fails()) {
             return response()->json([
                 'status' => 422,
@@ -94,36 +96,38 @@ class MoviesApiController extends Controller
     {
         $id = $request->route('id');
 
-
+        // fetching the data from the tmdb api
         $searchResults = Http::withToken(config('services.tmdb.token'))
         ->get('https://api.themoviedb.org/3/movie/'. $id .'?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
         ->json();
-
+        // filtering the json result by genres
         $allgenres = $searchResults['genres'];
-// dd($searchResults);
+        // dd($allgenres);
+
         foreach($searchResults as $results => $value)
         {
             $compiledGenre =[];
            foreach($allgenres as $genre => $value){
 
                $compiledGenre[] = $value['name'];
-            //    $lastIndex = count($compiledGenre) - 1;
-           }
-
-
-            $apiImageUrlBase = env('API_IMAGE_URL1');
 
         }
-        // $lastIndex = count($compiledGenre) - 1;
+
+
+        $apiImageUrlBase = env('API_IMAGE_URL1');
+
+    }
+           $isFirst = true;
 
         return view('show-movie',[
+            'isFirst' =>$isFirst,
             'searchResults' => $searchResults,
             'apiImageUrlBase'=>$apiImageUrlBase,
             'allgenres' => $allgenres,
             'genre'=>$genre,
             'value'=>$value,
             'compiledGenre'=>$compiledGenre,
-            // 'lastIndex'=>$lastIndex,
+            // 'genres' => $genres,
 
             // Stopped here, at last index. To continue from making all the genres be displayed.
         ]);
@@ -135,6 +139,28 @@ class MoviesApiController extends Controller
         $allCasts = Http::withToken(config('services.tmdb.token'))
         ->get('https://api.themoviedb.org/3/movie/550/credits?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
         ->json();
+
+    }
+
+    public function genres()
+    {
+        $genres =  Http::withToken(config('services.tmdb.token'))
+        ->get('https://api.themoviedb.org/3/genre/movie/list?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+        ->json()['genres'];
+        
+        // dd($genres);
+        return view('genres',[
+            'genres'=>$genres
+        ]);
+    }
+
+    public function adventures()
+    {
+        $adventures = Http::withToken(config('services.tmdb.token'))
+        ->get('https://api.themoviedb.org/3/movie/top_rated?api_key=ab7f39ebffc89afadaeda215cfbc1fbe')
+        ->json();
+
+        dd($adventures);
 
     }
 }

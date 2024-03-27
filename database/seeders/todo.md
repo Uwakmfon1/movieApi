@@ -11,7 +11,7 @@ Display it on postman                       - Done
 ### Movie Retrieval:
 
 ## By ID: 
-    Allow fetching details of a specific movie using its unique identifier.  -------
+    Allow fetching details of a specific movie using its unique identifier.         - Done
 
 ## By Title (with optional filters): 
     Allow searching for movies by title, with options to filter by genre, release date, etc.
