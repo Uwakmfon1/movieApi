@@ -19,6 +19,7 @@ Route::get('genres',[MoviesApiController::class,'genres']);
 Route::post('movies', [MoviesApiController::class,'store']);
 
 
+
 Route::get('movies/show/{id}',[MoviesApiController::class,'show'])->name('movies.show');
 
 Route::get('movies/adventures',[MoviesApiController::class,'adventures']);
