@@ -18,7 +18,6 @@
         padding: 0;
         list-style-type: none;
         box-sizing: border-box;
-
     }
 
     body {
@@ -74,18 +73,13 @@
 
 <body>
 
-    <div class="flex justify-between items-center mb-6">
-        <h1>welcome to page</h1>
-
-
-        <div id="tags">
-            {{-- <div class="tag"></div> --}}
-
-        </div>
-
+    <div class="flex">
+        <a href="{{ url('api/movies') }}" class="text-black mb-2">Home page</h1>
         <livewire:search-dropdown>
     </div>
+    <div id="tags">
 
+    </div>
 
 
     <div class="container">

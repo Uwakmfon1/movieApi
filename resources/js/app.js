@@ -1,5 +1,4 @@
-const API_URL =
-    "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=ab7f39ebffc89afadaeda215cfbc1fbe";
+const API_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=ab7f39ebffc89afadaeda215cfbc1fbe";
 
 const genres = [
     { id: 28, name: "Action" },

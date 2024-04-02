@@ -39,31 +39,48 @@ class MoviesApiController extends Controller
 
 
 
+        //SECOND PART FOR FILTERING BY GENRE ID WHEN GENRE BUTTON IS CLICKED
+
         if ($request->exists('genre')) {
             $allGenre = [];
             $particularGenre = [];
             $genreName = $request->get('genre');
+
             $genreId = $request->get('genreId');
 
-
-            // This fetches the movies by genre
-            for ($i = 0; $i < count($moviesApi); $i++) {
-                if (in_array($genreId, $moviesApi[$i]['genre_ids'])) {
-
-                    $particularGenre[] = $moviesApi[$i];
-
-
-                    $fParticularGenre = end($particularGenre);
-                    // dump($fParticularGenre);
-
-                    return view('apiGenre',compact('fParticularGenre'));
+            $moviesWithGenreId = [];
+            foreach ($moviesApi as $movie => $value) {
+                // Check if genre_ids key exists and is an array
+                if (is_array($value) && in_array($genreId, $value['genre_ids'])) {
+                    $moviesWithGenreId[] = $value;
                 }
-
             }
 
-        }
+            foreach ($moviesWithGenreId as $key => $val) {
+                $apiImageUrlBase = env('API_IMAGE_URL');
+                $getImage = $val['backdrop_path'];
+                $getTitle = $val['title'];
+                $id = $val['id'];
 
-// die();
+                return view('apiGenre', [
+                    'moviesWithGenreId' => $moviesWithGenreId,
+                    'apiImageUrlBase' => $apiImageUrlBase,
+                    'val' => $val,
+                ]);
+            }
+        }else{
+            return view('nonExistent');
+        }
+        // END OF THE SECOND PART
+
+
+
+
+
+        /**
+         * First part for displaying all movies gotten from the API
+         */
+        // Display all movies gotten from the api
         $newMoviesApi = $moviesApi;
         foreach ($newMoviesApi as $key => $value) {
             $apiImageUrlBase = env('API_IMAGE_URL');
@@ -80,8 +97,13 @@ class MoviesApiController extends Controller
             'value' => $value,
             'getImage' => $getImage,
             'getTitle' =>  $getTitle,
-            // 'fParticularGenre' => $fParticularGenre,
         ]);
+
+        // End of First Part
+
+
+
+
     }
 
 
